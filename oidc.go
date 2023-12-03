@@ -4,6 +4,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/lllamnyp/oidc/internal/client"
 	"github.com/lllamnyp/oidc/internal/token"
 )
 
@@ -61,4 +62,17 @@ func (t *maintainedTokenSource) maintainToken() {
 		}
 		t.updateToken()
 	}
+}
+
+// NewMaintainedTokenSource takes a confidential client's credentials and
+// returns a TokenSource which automatically refreshes the underlying token
+// once half of its validity duration expires.
+func NewMaintainedTokenSource(clientID, clientSecret, issuerURL string) TokenSource {
+	m := &maintainedTokenSource{}
+	m.d = time.Now()
+	m.e = 0
+	m.TokenSource = client.NewConfidentialClient(clientID, clientSecret, issuerURL)
+	m.updateToken()
+	go m.maintainToken()
+	return m
 }
