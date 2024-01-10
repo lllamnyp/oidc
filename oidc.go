@@ -57,7 +57,7 @@ func (t *maintainedTokenSource) updateToken() {
 
 func (t *maintainedTokenSource) maintainToken() {
 	for {
-		if updateDeadline := t.updateDeadline(); updateDeadline.Before(time.Now()) {
+		if updateDeadline := t.updateDeadline(); time.Now().Before(updateDeadline) {
 			time.Sleep(time.Until(updateDeadline))
 		}
 		t.updateToken()
