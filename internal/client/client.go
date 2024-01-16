@@ -45,12 +45,12 @@ func (c *confidentialClient) Token() token.Token {
 	return tok
 }
 
-func NewConfidentialClient(clientID, clientSecret, issuerURL string) *confidentialClient {
+func NewConfidentialClient(clientID, clientSecret, issuerURL string) (*confidentialClient, error) {
 	endpoint, err := getTokenEndpoint(issuerURL)
 	if err != nil {
-		return nil
+		return nil, err
 	}
-	return &confidentialClient{clientID, clientSecret, endpoint}
+	return &confidentialClient{clientID, clientSecret, endpoint}, nil
 }
 
 func getTokenEndpoint(issuerURL string) (string, error) {
